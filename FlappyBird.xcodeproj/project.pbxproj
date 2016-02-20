@@ -16,6 +16,7 @@
 		D7A0953D1C7899DE0068E111 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7A0953B1C7899DE0068E111 /* LaunchScreen.storyboard */; };
 		D7A095481C7899DE0068E111 /* FlappyBirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095471C7899DE0068E111 /* FlappyBirdTests.swift */; };
 		D7A095531C7899DE0068E111 /* FlappyBirdUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095521C7899DE0068E111 /* FlappyBirdUITests.swift */; };
+		D7A095611C78CEA60068E111 /* RandFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095601C78CEA60068E111 /* RandFunction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		D7A0954E1C7899DE0068E111 /* FlappyBirdUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlappyBirdUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7A095521C7899DE0068E111 /* FlappyBirdUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyBirdUITests.swift; sourceTree = "<group>"; };
 		D7A095541C7899DE0068E111 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7A095601C78CEA60068E111 /* RandFunction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandFunction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				D7A0952E1C7899DE0068E111 /* AppDelegate.swift */,
 				D7A095301C7899DE0068E111 /* GameScene.sks */,
 				D7A095321C7899DE0068E111 /* GameScene.swift */,
+				D7A095601C78CEA60068E111 /* RandFunction.swift */,
 				D7A095341C7899DE0068E111 /* GameViewController.swift */,
 				D7A095361C7899DE0068E111 /* Main.storyboard */,
 				D7A095391C7899DE0068E111 /* Assets.xcassets */,
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7A095611C78CEA60068E111 /* RandFunction.swift in Sources */,
 				D7A095331C7899DE0068E111 /* GameScene.swift in Sources */,
 				D7A095351C7899DE0068E111 /* GameViewController.swift in Sources */,
 				D7A0952F1C7899DE0068E111 /* AppDelegate.swift in Sources */,
@@ -501,6 +505,7 @@
 				D7A095591C7899DE0068E111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D7A0955A1C7899DE0068E111 /* Build configuration list for PBXNativeTarget "FlappyBirdTests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +514,7 @@
 				D7A0955C1C7899DE0068E111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D7A0955D1C7899DE0068E111 /* Build configuration list for PBXNativeTarget "FlappyBirdUITests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +523,7 @@
 				D7A0955F1C7899DE0068E111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

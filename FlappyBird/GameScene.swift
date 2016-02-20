@@ -18,9 +18,23 @@ class GameScene: SKScene {
     
     var ground = SKSpriteNode()
     var bird = SKSpriteNode()
+    var pipePair = SKNode()
+    var bg = SKSpriteNode()
+    
+    var moveAndRemovePipeSequence = SKAction()
+    
+    var gameStarted = false
+    
+    var normalBirdHeight = CGFloat()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        
+        bg = SKSpriteNode(imageNamed: "bg")
+        bg.setScale(self.frame.height / bg.frame.height)
+        bg.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        bg.zPosition = 0
+        self.addChild(bg)
         
         ground = SKSpriteNode(imageNamed: "ground")
         ground.setScale(0.5)
@@ -37,7 +51,7 @@ class GameScene: SKScene {
         self.addChild(ground)
         
         bird = SKSpriteNode(imageNamed: "bird")
-        bird.setScale(0.375)
+        bird.setScale(0.350)
         bird.position = CGPoint(x: self.frame.width / 2 - bird.frame.width/3*2, y: self.frame.height / 2)
         
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.frame.height / 2.45)
@@ -46,26 +60,28 @@ class GameScene: SKScene {
         bird.physicsBody?.contactTestBitMask = PhysicsCat.Ground | PhysicsCat.Pipe
         bird.physicsBody?.affectedByGravity = true
         bird.physicsBody?.dynamic = true
+
         
         bird.zPosition = 2
         self.addChild(bird)
         
-        createPipes()
+        normalBirdHeight = bird.size.height
         
     }
     
     func createPipes() {
-        let pipePair = SKNode()
+        
+        pipePair = SKNode() // needed to keep changing references SKNodes. there are multiple  pipePairs existing at the same time.
         
         let topPipe = SKSpriteNode(imageNamed: "pipe")
         let btmPipe = SKSpriteNode(imageNamed: "pipe")
         
-        let pipeImageScale:CGFloat = 0.5
+        let pipeImageScale:CGFloat = 0.75
         topPipe.setScale(pipeImageScale)
         btmPipe.setScale(pipeImageScale)
         topPipe.zRotation = CGFloat(M_PI)
         
-        let pipeGap: CGFloat = 300
+        let pipeGap: CGFloat = 425
         topPipe.position = CGPoint(x: self.frame.width, y: self.frame.height / 2 + pipeGap)
         btmPipe.position = CGPoint(x: self.frame.width, y: self.frame.height / 2 - pipeGap)
         
@@ -86,7 +102,10 @@ class GameScene: SKScene {
         pipePair.addChild(topPipe)
         pipePair.addChild(btmPipe)
         
+        pipePair.position.y += CGFloat.random(min: -200, max: 200)
+        
         pipePair.zPosition = 1
+        pipePair.runAction(moveAndRemovePipeSequence)
         self.addChild(pipePair)
         
     }
@@ -94,12 +113,50 @@ class GameScene: SKScene {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
         
-        bird.physicsBody?.velocity = CGVectorMake(0, 0)
-        bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
+        if gameStarted {
+            bird.physicsBody?.velocity = CGVectorMake(0, 0)
+            bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
+        } else {
+            
+            gameStarted = true
+            
+            let spawn = SKAction.runBlock({
+                self.createPipes()
+            })
+            let delay = SKAction.waitForDuration(3.25)
+            let spawnPipeAndWaitSequence = SKAction.sequence([spawn, delay])
+            let repeatedlySpawnPipeSequence = SKAction.repeatActionForever(spawnPipeAndWaitSequence)
+            
+            self.runAction(repeatedlySpawnPipeSequence)
+            
+            let distance = CGFloat(self.frame.width + pipePair.frame.width)
+            let movePipes = SKAction.moveByX(-distance, y: 0, duration: NSTimeInterval(0.01 * distance))
+            let removePipes = SKAction.removeFromParent()
+            moveAndRemovePipeSequence = SKAction.sequence([movePipes, removePipes])
+            
+            
+            bird.physicsBody?.velocity = CGVectorMake(0, 0)
+            bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
+        }
         
+        compressBird()
+    }
+    
+    func compressBird() {
+        bird.position = CGPoint(x: bird.position.x, y: bird.position.y - bird.size.height * 0.1 / 2)
+        bird.size = CGSize(width: bird.size.width, height: bird.size.height * 0.9)
+        performSelector(Selector("returnNormalBirdState"), withObject: nil, afterDelay: 0.175)
+        
+    }
+    func returnNormalBirdState() {
+        bird.size = CGSize(width: bird.size.width, height: bird.size.height / 0.9)
+        bird.position = CGPoint(x: bird.position.x, y: bird.position.y + bird.size.height * 0.1 / 2)
     }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        
+         bird.physicsBody?.applyAngularImpulse(-0.05 * bird.zRotation)
+       
     }
 }
