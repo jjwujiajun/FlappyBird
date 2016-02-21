@@ -12,9 +12,10 @@ struct PhysicsCat {
     static let Bird: UInt32 = 0x1 << 1
     static let Ground: UInt32 = 0x1 << 2
     static let Pipe: UInt32 = 0x1 << 3
+    static let Score: UInt32 = 0x1 << 4
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var ground = SKSpriteNode()
     var bird = SKSpriteNode()
@@ -24,11 +25,12 @@ class GameScene: SKScene {
     var moveAndRemovePipeSequence = SKAction()
     
     var gameStarted = false
-    
-    var normalBirdHeight = CGFloat()
+    var score = 0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        
+        self.physicsWorld.contactDelegate = self
         
         bg = SKSpriteNode(imageNamed: "bg")
         bg.setScale(self.frame.height / bg.frame.height)
@@ -57,7 +59,7 @@ class GameScene: SKScene {
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.frame.height / 2.45)
         bird.physicsBody?.categoryBitMask = PhysicsCat.Bird
         bird.physicsBody?.collisionBitMask = PhysicsCat.Ground | PhysicsCat.Pipe
-        bird.physicsBody?.contactTestBitMask = PhysicsCat.Ground | PhysicsCat.Pipe
+        bird.physicsBody?.contactTestBitMask = PhysicsCat.Ground | PhysicsCat.Pipe | PhysicsCat.Score
         bird.physicsBody?.affectedByGravity = true
         bird.physicsBody?.dynamic = true
 
@@ -65,8 +67,15 @@ class GameScene: SKScene {
         bird.zPosition = 2
         self.addChild(bird)
         
-        normalBirdHeight = bird.size.height
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
         
+        if (contact.bodyA.categoryBitMask == PhysicsCat.Score && contact.bodyB.categoryBitMask == PhysicsCat.Bird) ||
+           (contact.bodyA.categoryBitMask == PhysicsCat.Bird && contact.bodyB.categoryBitMask == PhysicsCat.Score) {
+            score++
+            print(score)
+        }
     }
     
     func createPipes() {
@@ -75,6 +84,7 @@ class GameScene: SKScene {
         
         let topPipe = SKSpriteNode(imageNamed: "pipe")
         let btmPipe = SKSpriteNode(imageNamed: "pipe")
+        let scoreNode = SKSpriteNode()
         
         let pipeImageScale:CGFloat = 0.75
         topPipe.setScale(pipeImageScale)
@@ -98,13 +108,23 @@ class GameScene: SKScene {
         btmPipe.physicsBody?.contactTestBitMask = PhysicsCat.Bird
         btmPipe.physicsBody?.affectedByGravity = false
         btmPipe.physicsBody?.dynamic = false
+
+        scoreNode.size = CGSize(width: 1, height: pipeGap * 2)
+        scoreNode.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOfSize: scoreNode.size)
+        scoreNode.physicsBody?.categoryBitMask = PhysicsCat.Score
+        scoreNode.physicsBody?.collisionBitMask = 0
+        scoreNode.physicsBody?.contactTestBitMask = PhysicsCat.Bird
+        scoreNode.physicsBody?.affectedByGravity = false
+        scoreNode.physicsBody?.dynamic = false
         
         pipePair.addChild(topPipe)
         pipePair.addChild(btmPipe)
+        pipePair.addChild(scoreNode)
         
         pipePair.position.y += CGFloat.random(min: -200, max: 200)
-        
         pipePair.zPosition = 1
+        
         pipePair.runAction(moveAndRemovePipeSequence)
         self.addChild(pipePair)
         
