@@ -17,6 +17,7 @@
 		D7A095481C7899DE0068E111 /* FlappyBirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095471C7899DE0068E111 /* FlappyBirdTests.swift */; };
 		D7A095531C7899DE0068E111 /* FlappyBirdUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095521C7899DE0068E111 /* FlappyBirdUITests.swift */; };
 		D7A095611C78CEA60068E111 /* RandFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A095601C78CEA60068E111 /* RandFunction.swift */; };
+		D7E2DD0B1C7A091E001BCCCE /* angrybirds-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7E2DD0A1C7A091E001BCCCE /* angrybirds-regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		D7A095521C7899DE0068E111 /* FlappyBirdUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyBirdUITests.swift; sourceTree = "<group>"; };
 		D7A095541C7899DE0068E111 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7A095601C78CEA60068E111 /* RandFunction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandFunction.swift; sourceTree = "<group>"; };
+		D7E2DD0A1C7A091E001BCCCE /* angrybirds-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "angrybirds-regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				D7A095321C7899DE0068E111 /* GameScene.swift */,
 				D7A095601C78CEA60068E111 /* RandFunction.swift */,
 				D7A095341C7899DE0068E111 /* GameViewController.swift */,
+				D7E2DD0A1C7A091E001BCCCE /* angrybirds-regular.ttf */,
 				D7A095361C7899DE0068E111 /* Main.storyboard */,
 				D7A095391C7899DE0068E111 /* Assets.xcassets */,
 				D7A0953B1C7899DE0068E111 /* LaunchScreen.storyboard */,
@@ -240,6 +243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7A095311C7899DE0068E111 /* GameScene.sks in Resources */,
+				D7E2DD0B1C7A091E001BCCCE /* angrybirds-regular.ttf in Resources */,
 				D7A0953D1C7899DE0068E111 /* LaunchScreen.storyboard in Resources */,
 				D7A0953A1C7899DE0068E111 /* Assets.xcassets in Resources */,
 				D7A095381C7899DE0068E111 /* Main.storyboard in Resources */,
