@@ -26,11 +26,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var gameStarted = false
     var score = 0
+    let scoreLabel = SKLabelNode()
     
-    override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-        
+    var birdDied = false
+    var restartBtn = SKSpriteNode()
+    
+    func restartScene() {
+        self.removeAllChildren()
+        self.removeAllActions()
+        birdDied = false
+        gameStarted = false
+        score = 0
+        createScene()
+    }
+    
+    func createScene() {
         self.physicsWorld.contactDelegate = self
+        
+        scoreLabel.position = CGPoint(x: self.frame.width / 2, y: self.frame.height * 0.9)
+        scoreLabel.text = "\(score)"
+        scoreLabel.zPosition = 4
+        self.addChild(scoreLabel)
         
         bg = SKSpriteNode(imageNamed: "bg")
         bg.setScale(self.frame.height / bg.frame.height)
@@ -62,11 +78,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.physicsBody?.contactTestBitMask = PhysicsCat.Ground | PhysicsCat.Pipe | PhysicsCat.Score
         bird.physicsBody?.affectedByGravity = true
         bird.physicsBody?.dynamic = true
-
         
         bird.zPosition = 2
         self.addChild(bird)
-        
+    }
+    
+    override func didMoveToView(view: SKView) {
+        /* Setup your scene here */
+        createScene()
+    }
+    
+    func createRestartBtn() {
+        restartBtn = SKSpriteNode(color: SKColor.blueColor(), size: CGSize(width: 200, height: 100))
+        restartBtn.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        restartBtn.zPosition = 5
+        self.addChild(restartBtn)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -74,7 +100,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if (contact.bodyA.categoryBitMask == PhysicsCat.Score && contact.bodyB.categoryBitMask == PhysicsCat.Bird) ||
            (contact.bodyA.categoryBitMask == PhysicsCat.Bird && contact.bodyB.categoryBitMask == PhysicsCat.Score) {
             score++
-            print(score)
+            scoreLabel.text = "\(score)"
+        }
+        
+        if (contact.bodyA.categoryBitMask == PhysicsCat.Pipe && contact.bodyB.categoryBitMask == PhysicsCat.Bird) ||
+            (contact.bodyA.categoryBitMask == PhysicsCat.Bird && contact.bodyB.categoryBitMask == PhysicsCat.Pipe) {
+                birdDied = true
+                createRestartBtn()
         }
     }
     
@@ -110,13 +142,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         btmPipe.physicsBody?.dynamic = false
 
         scoreNode.size = CGSize(width: 1, height: pipeGap * 2)
-        scoreNode.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        scoreNode.position = CGPoint(x: self.frame.width, y: self.frame.height / 2)
         scoreNode.physicsBody = SKPhysicsBody(rectangleOfSize: scoreNode.size)
         scoreNode.physicsBody?.categoryBitMask = PhysicsCat.Score
         scoreNode.physicsBody?.collisionBitMask = 0
         scoreNode.physicsBody?.contactTestBitMask = PhysicsCat.Bird
         scoreNode.physicsBody?.affectedByGravity = false
         scoreNode.physicsBody?.dynamic = false
+        scoreNode.color = SKColor.blueColor()
         
         pipePair.addChild(topPipe)
         pipePair.addChild(btmPipe)
@@ -134,8 +167,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        /* Called when a touch begins */
         
         if gameStarted {
-            bird.physicsBody?.velocity = CGVectorMake(0, 0)
-            bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
+            if !birdDied {
+                bird.physicsBody?.velocity = CGVectorMake(0, 0)
+                bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
+                compressBird()
+            }
         } else {
             
             gameStarted = true
@@ -159,7 +195,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bird.physicsBody?.applyImpulse(CGVectorMake(0, 200))
         }
         
-        compressBird()
+        for touch in touches {
+            let location = touch.locationInNode(self)
+            
+            if birdDied {
+                if restartBtn.containsPoint(location) {
+                    restartScene()
+                }
+            }
+        }
     }
     
     func compressBird() {
